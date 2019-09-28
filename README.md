@@ -71,7 +71,6 @@ CREATE TABLE `message` (
 [GIN-debug] POST   /api/upload               --> main.main.func8 (4 handlers)
 [GIN-debug] Listening and serving HTTP on :8081
 ```
-
 1. /api/postmsg           处理账户信息表单的提交
 2. /api/message           处理房源信息表单的提交
 3. /api/checkUser/:id     处理按账号名查询的的请求

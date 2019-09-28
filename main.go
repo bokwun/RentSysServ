@@ -18,7 +18,7 @@ import (
 )
 
 type Person struct {
-	Id string `json:"id" form:"id"`
+	Id       string `json:"id" form:"id"`
 	Password string `json:"password" form:"password"`
 }
 type Message struct {
@@ -48,15 +48,15 @@ func cors() gin.HandlerFunc {
 		//允许访问所有域
 		c.Header("Access-Control-Allow-Origin", "*")
 		//header的类型
-		c.Header("Access-Control-Allow-Headers",  "Authorization, Content-Length, X-CSRF-Token, " +
-			"Token,session,X_Requested_With,Accept, Origin, Host, Connection, " +
-			"Accept-Encoding, Accept-Language,DNT, X-CustomHeader, Keep-Alive, User-Agent, " +
+		c.Header("Access-Control-Allow-Headers", "Authorization, Content-Length, X-CSRF-Token, "+
+			"Token,session,X_Requested_With,Accept, Origin, Host, Connection, "+
+			"Accept-Encoding, Accept-Language,DNT, X-CustomHeader, Keep-Alive, User-Agent, "+
 			"X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Pragma")
 		//服务器支持所有跨域请求方法
 		c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, UPDATE")
 		//跨域关键设置，让浏览器可以解析
-		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, " +
-			"Access-Control-Allow-Headers,Cache-Control,Content-Language,Content-Type,Expires," +
+		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, "+
+			"Access-Control-Allow-Headers,Cache-Control,Content-Language,Content-Type,Expires,"+
 			"Last-Modified,Pragma,FooBar")
 		//跨域请求是否需要带cookie信息，默认设置为true
 		c.Header("Access-Control-Allow-Credentials", "true")
@@ -71,7 +71,7 @@ func cors() gin.HandlerFunc {
 	}
 }
 
-func main()  {
+func main() {
 	router := gin.Default()
 
 	//只有当真正数据库通信的时候才创建连接
@@ -79,7 +79,7 @@ func main()  {
 		"mysql",
 		"root:Root.1231@tcp(127.0.0.1:3306)/user?parseTime=true",
 	)
-	if err != nil{
+	if err != nil {
 		log.Fatalln(err)
 	}
 	defer db.Close()
@@ -90,7 +90,7 @@ func main()  {
 	db.SetMaxOpenConns(20)
 
 	//当我们需要在open之后就知道连接的有效性的时候，可以通过ping()来进行
-	if err := db.Ping(); err != nil{
+	if err := db.Ping(); err != nil {
 		log.Fatalln(err)
 	}
 
@@ -100,22 +100,20 @@ func main()  {
 		api.POST("/postmsg", func(c *gin.Context) {
 			id := c.PostForm("id")
 			password := c.PostForm("password")
-			_, err := db.Exec("insert into person(id, password) values (?, ?)",id, password)
-			if err != nil{
+			_, err := db.Exec("insert into person(id, password) values (?, ?)", id, password)
+			if err != nil {
 				//系统退出原因，追踪代码可知os.exit()
 				log.Fatalln(err)
 			}
 			c.JSON(http.StatusOK, gin.H{
-				"id": id,
+				"id":       id,
 				"password": password,
-
 			})
 		})
 		api.POST("/message", func(c *gin.Context) {
 			timestamp := time.Now().Unix()
 			ts := time.Unix(timestamp, 0)
 			t := ts.Format("1234567890123")
-
 
 			idUser := c.PostForm("idUser")
 			xiaoqumc := c.PostForm("xiaoqumc")
@@ -135,20 +133,18 @@ func main()  {
 			dateTime := c.PostForm("dateTime")
 			picName := t + c.PostForm("picName")
 
-
-			_, err := db.Exec("insert into message(idUser, xiaoqumc, shi, ting, wei, mianji," +
-				"diceng, gongceng, chewei, zujin, quyu, biaoti, miaoshu, lianxiren, lianxidh, dateTime, picName) values " +
-				"(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",idUser, xiaoqumc, shi, ting, wei, mianji,
+			_, err := db.Exec("insert into message(idUser, xiaoqumc, shi, ting, wei, mianji,"+
+				"diceng, gongceng, chewei, zujin, quyu, biaoti, miaoshu, lianxiren, lianxidh, dateTime, picName) values "+
+				"(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", idUser, xiaoqumc, shi, ting, wei, mianji,
 				diceng, gongceng, chewei, zujin, quyu, biaoti, miaoshu, lianxiren, lianxidh, dateTime, picName)
 			if err != nil {
 				log.Fatalln(err)
 			}
 			c.JSON(http.StatusOK, gin.H{
-				"idUser": idUser,"xiaoqumc" :xiaoqumc, "shi"     :shi,     "ting"	 :ting,
-				"wei"	 : wei,	   "mianji"   :mianji,   "diceng"  :diceng,  "gongceng":gongceng,
-				"chewei" :chewei,  "zujin"    :zujin,    "quyu"    :quyu,    "biaoti"  :biaoti,
-				"miaoshu":miaoshu, "lianxiren":lianxiren,"lianxidh":lianxidh,"dateTime":dateTime, "picName":picName,
-
+				"idUser": idUser, "xiaoqumc": xiaoqumc, "shi": shi, "ting": ting,
+				"wei": wei, "mianji": mianji, "diceng": diceng, "gongceng": gongceng,
+				"chewei": chewei, "zujin": zujin, "quyu": quyu, "biaoti": biaoti,
+				"miaoshu": miaoshu, "lianxiren": lianxiren, "lianxidh": lianxidh, "dateTime": dateTime, "picName": picName,
 			})
 		})
 
@@ -157,7 +153,7 @@ func main()  {
 			var person Person
 			err := db.QueryRow(
 				"select id, password from person where id=?", id).Scan(&person.Id, &person.Password)
-			if err != nil{
+			if err != nil {
 				c.JSON(http.StatusOK, gin.H{
 					"person": nil,
 				})
@@ -207,7 +203,7 @@ func main()  {
 				err := rows.Scan(&message.IdUser, &message.Xiaoqumc, &message.Shi, &message.Ting,
 					&message.Wei, &message.Mianji, &message.Diceng, &message.Gongceng,
 					&message.Chewei, &message.Zujin, &message.Quyu, &message.Biaoti,
-					&message.Miaoshu, &message.Lianxiren,&message.Lianxidh, &message.DateTime, &message.PicName)
+					&message.Miaoshu, &message.Lianxiren, &message.Lianxidh, &message.DateTime, &message.PicName)
 				if err != nil {
 					log.Println(err)
 				}
@@ -235,7 +231,7 @@ func main()  {
 				err := rows.Scan(&message.IdUser, &message.Xiaoqumc, &message.Shi, &message.Ting,
 					&message.Wei, &message.Mianji, &message.Diceng, &message.Gongceng,
 					&message.Chewei, &message.Zujin, &message.Quyu, &message.Biaoti,
-					&message.Miaoshu, &message.Lianxiren,&message.Lianxidh, &message.DateTime, &message.PicName)
+					&message.Miaoshu, &message.Lianxiren, &message.Lianxidh, &message.DateTime, &message.PicName)
 				if err != nil {
 					log.Println(err)
 				}
@@ -286,7 +282,7 @@ func main()  {
 			//拼接后的select语句
 			sel := "select * from message where " + first + " and " + second + " and " + third
 			//租金这块有时需要两个值，有时只需要一个
-			if zujin == "1000" || zujin =="5000" || zujin == "0" {
+			if zujin == "1000" || zujin == "5000" || zujin == "0" {
 				rows, err = db.Query(sel, quyu, zujin, shi)
 			} else {
 				rows, err = db.Query(sel, quyu, zujinMin, zujinMax, shi)
@@ -303,7 +299,7 @@ func main()  {
 				err := rows.Scan(&message.IdUser, &message.Xiaoqumc, &message.Shi, &message.Ting,
 					&message.Wei, &message.Mianji, &message.Diceng, &message.Gongceng,
 					&message.Chewei, &message.Zujin, &message.Quyu, &message.Biaoti,
-					&message.Miaoshu, &message.Lianxiren,&message.Lianxidh, &message.DateTime, &message.PicName)
+					&message.Miaoshu, &message.Lianxiren, &message.Lianxidh, &message.DateTime, &message.PicName)
 				if err != nil {
 					log.Println(err)
 				}
@@ -338,12 +334,17 @@ func main()  {
 			timestamp := time.Now().Unix()
 			ts := time.Unix(timestamp, 0)
 			t := ts.Format("1234567890123")
+			//图片资源提交到niginx服务器上
 			//  /usr/local/webserver/nginx/html/img/  是路径，要是后面没有/结尾，则最后一个/的后面为创建的文件的前缀
-			out, err := os.Create("/usr/local/webserver/nginx/html/img/" + t +filename)
+			//windows
+			out, err := os.Create("E:/Program Files/nginx-1.16.1/html/img/" + t + filename)
+
+			//linux
+			//out, err := os.Create("/usr/local/webserver/nginx/html/img/" + t +filename)
 			if err != nil {
 				c.JSON(500, gin.H{
 					"status": 500,
-					"msg": 0,
+					"msg":    0,
 				})
 				log.Fatalln(err)
 			}
@@ -352,7 +353,7 @@ func main()  {
 			if err != nil {
 				c.JSON(500, gin.H{
 					"status": 500,
-					"msg": 0,
+					"msg":    0,
 				})
 				log.Fatalln(err)
 			}
