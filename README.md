@@ -51,3 +51,32 @@ CREATE TABLE `message` (
     CONSTRAINT `message_ibfk_1` FOREIGN KEY (`idUser`) REFERENCES `person` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
   ```
+  
+## 已有API
+
+```
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] POST   /api/postmsg              --> main.main.func1 (4 handlers)
+[GIN-debug] POST   /api/message              --> main.main.func2 (4 handlers)
+[GIN-debug] GET    /api/checkUser/:id        --> main.main.func3 (4 handlers)
+[GIN-debug] GET    /api/returnMsg            --> main.main.func4 (4 handlers)
+[GIN-debug] GET    /api/returnUserMsg/:idUser --> main.main.func5 (4 handlers)
+[GIN-debug] GET    /api/returnMsgWhere       --> main.main.func6 (4 handlers)
+[GIN-debug] GET    /api/delMessage           --> main.main.func7 (4 handlers)
+[GIN-debug] POST   /api/upload               --> main.main.func8 (4 handlers)
+[GIN-debug] Listening and serving HTTP on :8081
+```
+1. /api/postmsg           处理账户信息表单的提交
+2. /api/message           处理房源信息表单的提交
+3. /api/checkUser/:id     处理按账号名查询的的请求
+4. /api/returnMsg         返回信息
+5. /api/returnUserMsg/:id 处理按账户名查询的请求
+6. /api/returnMsgWhere    处理按条件查询的请求
+7. /api/delMessage        删除数据
+8. /api/upload            处理图片上传
+
